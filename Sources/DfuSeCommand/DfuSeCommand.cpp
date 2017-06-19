@@ -148,6 +148,7 @@ bool Is_Option(char* option)
 	else if (strcmp(option,"-c")==0) return true;
 	else if (strcmp(option,"-u")==0) return true;
 	else if (strcmp(option,"-d")==0) return true;
+	else if (strcmp(option, "-t") == 0) return true;
     else return false;
 }
 
@@ -1595,9 +1596,70 @@ int main(int argc, char* argv[])
 			   OnCancel();
 
 			   //return 0;
-   
-
 			}
+
+			///////////////////////////
+			else if (strcmp(argv[arg_index], "-t") == 0)
+			{
+			//	CString Tmp;
+			//	HANDLE Image;
+			//	BYTE	m_AltSet;
+			//	CDWordArray m_Images;
+			//	if (STDFUFILES_ImageFromFile(argv[++arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
+			//	{
+			//		m_Images.Add((DWORD)Image);
+			//		Tmp.Format("Image for Alternate Setting %02i", m_AltSet);
+			//		if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)argv[++arg_index]) == STDFUFILES_NOERROR)
+			//		{
+			//			Tmp += "  (";
+			//			Tmp += argv[arg_index];
+			//			Tmp += ")";
+			//		}
+			//		printf(Tmp);
+			///*		m_ListFiles.AddString(Tmp);
+			//		m_ListFiles.SetCurSel(0);*/
+			//	}
+			//	else
+			//		AfxMessageBox("Unable to create image from this file...");
+
+			//	HANDLE hFile;
+			//	if (STDFUFILES_CreateNewDFUFile((LPSTR)(LPCSTR)argv[arg_index], &hFile, 0x0483, 0x0000, 0x0000) == STDFUFILES_NOERROR)
+			//	{
+			//		HANDLE Image;
+			//		if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
+			//		{
+			//			Tmp.Format("Success for '%s' !");
+			//			AfxMessageBox(Tmp);
+			//		}
+			//		else
+			//		{
+			//			Tmp.Format("Failure for '%s'...");
+			//			AfxMessageBox(Tmp);
+			//		}
+			//		/*for (int i = 0; i<m_Images.GetSize(); i++)
+			//		{
+			//			CString Tmp, Tmp1;
+
+			//			HANDLE Image = (HANDLE)m_Images.GetAt(i);
+
+			//			m_ListFiles.GetText(i, Tmp1);
+			//			if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
+			//			{
+			//				Tmp.Format("Success for '%s' !", Tmp1);
+			//				AfxMessageBox(Tmp);
+			//			}
+			//			else
+			//			{
+			//				Tmp.Format("Failure for '%s'...", Tmp1);
+			//				AfxMessageBox(Tmp);
+			//			}
+			//		}*/
+			//		STDFUFILES_CloseDFUFile(hFile);
+			//	}
+				printf("\n Hello World ...");
+				return 0;
+			}
+			
 			
 		} // While
 
