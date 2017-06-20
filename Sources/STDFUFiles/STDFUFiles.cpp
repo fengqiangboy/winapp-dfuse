@@ -457,7 +457,6 @@ extern "C" DWORD PASCAL EXPORT STDFUFILES_ImageFromFile(PSTR pPathFile, PHANDLE 
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	
 	DWORD Ret=STDFUFILES_BADPARAMETER;
-
 	CImage *obImage=new CImage(nAlternate, pPathFile, FALSE, NULL);
 	if (obImage)
 	{

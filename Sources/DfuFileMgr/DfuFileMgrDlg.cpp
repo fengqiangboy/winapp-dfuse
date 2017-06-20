@@ -343,6 +343,7 @@ void CDfuFileMgrDlg::OnButtonadds19hex()
 			HANDLE Image;
 			if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)dlg->GetPathName(), &Image, m_AltSet) == STDFUFILES_NOERROR)
 			{
+
 				m_Images.Add((DWORD)Image);
 				Tmp.Format("Image for Alternate Setting %02i", m_AltSet);
 				if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)m_TargetName) == STDFUFILES_NOERROR)
