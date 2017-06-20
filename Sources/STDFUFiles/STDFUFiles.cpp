@@ -468,7 +468,8 @@ extern "C" DWORD PASCAL EXPORT STDFUFILES_ImageFromFile(PSTR pPathFile, PHANDLE 
 			Ret=STDFUFILES_NOERROR;
 		}
 		else
-		{
+		{//has error
+
 			delete obImage;
 			Ret=STDFUFILES_BADFORMAT;
 		}
