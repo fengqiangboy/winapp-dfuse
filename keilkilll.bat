@@ -31,6 +31,6 @@ del *.log /s
 del *.obj /s
 del *.pch /s
 del *.res /s
-del .vs\*.* /s/q
+rd Sources\.vs\ /s/q
 
 exit
