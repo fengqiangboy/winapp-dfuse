@@ -1604,14 +1604,11 @@ int main(int argc, char* argv[])
 			{
 				CString Tmp;
 				HANDLE Image;
-				BYTE	m_AltSet;
-				CDWordArray m_Images;
-				//CListBox	m_ListFiles;
-				//Sleep(1000);
+				HANDLE hFile;
+				BYTE m_AltSet = 0;
 
 				if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[++arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
 				{
-					m_Images.Add((DWORD)Image);
 					Tmp.Format("Image for Alternate Setting %02i", m_AltSet);
 					if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)argv[++arg_index]) == STDFUFILES_NOERROR)
 					{
@@ -1619,39 +1616,23 @@ int main(int argc, char* argv[])
 						Tmp += argv[arg_index];
 						Tmp += ")";
 					}
-					printf(Tmp);
-			/*		m_ListFiles.AddString(Tmp);
-					m_ListFiles.SetCurSel(0);*/
+					printf(Tmp+"\r\n");
 				}
 				else
 				{
-					AfxMessageBox("Unable to create image from this file...");
+					printf("Unable to create image from this file...");
 					return 0;
 				}
 				
-				
-				
-				Sleep(2000);
-				HANDLE hFile;
 				if (STDFUFILES_CreateNewDFUFile((LPSTR)(LPCSTR)argv[arg_index], &hFile, 0x0483, 0x0000, 0x0000) == STDFUFILES_NOERROR)
 				{
-					for (int i = 0; i<m_Images.GetSize(); i++)
+					if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
 					{
-						CString Tmp, Tmp1;
-
-						HANDLE Image = (HANDLE)m_Images.GetAt(i);
-
-						//m_ListFiles.GetText(i, Tmp1);
-						if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
-						{
-							Tmp.Format("Success for '%s' !", Tmp1);
-							AfxMessageBox(Tmp);
-						}
-						else
-						{
-							Tmp.Format("Failure for '%s'...", Tmp1);
-							AfxMessageBox(Tmp);
-						}
+						printf("Success for convert.");
+					}
+					else
+					{
+						printf("Failure for convert.");
 					}
 					STDFUFILES_CloseDFUFile(hFile);
 				}

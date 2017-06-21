@@ -326,7 +326,9 @@ void CDfuFileMgrDlg::OnButtonadds19hex()
 	CString Tmp;
 
 	UpdateData(TRUE);
+	
 	Tmp.Format("Image for Alternate Setting %02i", m_AltSet);
+	
 	if (m_ListFiles.FindString(-1, Tmp) != LB_ERR)
 		AfxMessageBox("This alternate setting was already chosen");
 	else

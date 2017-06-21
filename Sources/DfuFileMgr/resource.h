@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by DfuFileMgr.rc
+// Microsoft Visual C++ 生成的包含文件。
+// 供 DfuFileMgr.rc 使用
 //
 #define IDD_DfuFileMgr_DIALOG           102
 #define IDD_DfuFileMgrGenerate_DIALOG   102
