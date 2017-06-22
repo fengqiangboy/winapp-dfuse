@@ -100,13 +100,11 @@ CImage::CImage(BYTE bAlternate, PSTR pFilePath, BOOL bNamed, PSTR Name)
 	_splitpath(pFilePath,Drive,Dir,Fname,Ext);
 	ptr=strupr(Ext);
 	strcpy(Ext, ptr);
-
 	if (strcmp(Ext, ".S19")==0)
 		bRet=LoadS19(pFilePath);
 	else
 	if (strcmp(Ext, ".HEX")==0)
 		bRet=LoadHEX(pFilePath);
-
 	m_ImageState=bRet;
 	m_bNamed=bNamed;
 	if (bNamed)
@@ -468,14 +466,14 @@ BOOL CImage::LoadHEX(PSTR pFilePath)
 					  sum_var;                        /* to calculate checksum */
 		unsigned long byte_count,                     /* bytes per line in hexfile */
 					  separator,                      /* separator string in hexfile */
-					  last_byte,                      /* convertion end */
-					  character,                      /* date from hexfile */
-					  colon;                          /* begin of line in hexfile */
+			          last_byte,                      /* convertion end */
+			          character,                      /* date from hexfile */
+			          //colon;                          /* begin of line in hexfile */
+			          colon=0;							/*官方的代码没有初始化colon为0，导致在命令行中运行有时候转换失败*/
 		unsigned short lineno=1;
 		char message[100];		// error message
 
 		last_byte = FALSE;						  /* conversion begin */
-
 		do {
 			sum_var = 0;                          /* checksum calculation begin */
 			fscanf(fp,"%1c",&colon);
@@ -634,6 +632,7 @@ BOOL CImage::LoadHEX(PSTR pFilePath)
 				wsprintf(message, "FILE : line %i: Not in Intel Hex format!", lineno);
 				LDisplayError(message);
 				bRet=FALSE;
+				printf("FILE : line %i: Bad hexadecimal checksum!", colon);
 				break;
 			}
 		}

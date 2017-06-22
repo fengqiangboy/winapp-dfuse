@@ -1602,15 +1602,32 @@ int main(int argc, char* argv[])
 			//============================ hex2dfu ==============================================
 			else if (strcmp(argv[arg_index], "-t") == 0)
 			{
+				if (arg_index++ >= argc)
+				{
+					printf("Please select .hex or .s19 file\r\n");
+					return 0;
+				}
 				CString Tmp;
 				HANDLE Image;
 				HANDLE hFile;
 				BYTE m_AltSet = 0;
+				PSTR tFilePath = "";
 
-				if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[++arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
+				if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
 				{
 					Tmp.Format("Image for Alternate Setting %02i", m_AltSet);
-					if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)argv[++arg_index]) == STDFUFILES_NOERROR)
+					
+					if (argc == 3)//no target file
+					{
+						char Drive[3], Dir[256], Fname[256], Ext[256];
+						_splitpath(argv[arg_index], Drive, Dir, Fname, Ext);
+						tFilePath = strncat(Fname, ".dfu", 4);
+					}
+					else
+						tFilePath = argv[++arg_index];
+
+					printf("%s\r\n", tFilePath);
+					if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)tFilePath) == STDFUFILES_NOERROR)
 					{
 						Tmp += "  (";
 						Tmp += argv[arg_index];
@@ -1624,7 +1641,7 @@ int main(int argc, char* argv[])
 					return 0;
 				}
 				
-				if (STDFUFILES_CreateNewDFUFile((LPSTR)(LPCSTR)argv[arg_index], &hFile, 0x0483, 0x0000, 0x0000) == STDFUFILES_NOERROR)
+				if (STDFUFILES_CreateNewDFUFile((LPSTR)(LPCSTR)tFilePath, &hFile, 0x0483, 0x0000, 0x0000) == STDFUFILES_NOERROR)
 				{
 					if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
 					{
