@@ -65,20 +65,35 @@
 
 2. 这一项还没想到。。。。。。。
 
-### 更新日期 2017/06/17
+#### 初次提交 2017/06/17
 
-### 更新日期 2017/06/20
+#### 更新日期 2017/06/20
 首次在DfuSeCommand中实现hex转dfu，不过还存在bug，有时候会转换失败。
 
-### 更新日期 2017/06/23
+#### 更新日期 2017/06/23
 解决将hex文件转换成dfu文件时有时候失败的bug，完成-t命令进行文件转换。
 
-### 更新日期 2017/06/24
+#### 更新日期 2017/06/24
 完善命令行，使-t(hex转dfu命令)命令与原有命令兼容。
-实现使用一条命令> `.\DfuSeCommand.exe -t test.hex test.dfu -c --de 0 -d --fn test.dfu`  即可实现转换与下载。
-上述命令可简写为> `.\DfuSeCommand.exe -t test.hex -c --de 0 -d --fn test.dfu ` 
-上述命令可分写为> `.\DfuSeCommand.exe -t test.hex demo.dfu` 将test.hex转成demo.dfu文件
-				  `.\DfuSeCommand.exe -c --de 0` 连接dfu设备
-				  `.\DfuSeCommand.exe -d --fn demo.dfu ` 下载之前生成的demo.dfu文件
+
+实现使用一条命令> 	
+ ``` 
+ 	.\DfuSeCommand.exe -t test.hex test.dfu -c --de 0 -d --fn test.dfu 即可实现转换与下载。
+ ````  
+
+上述命令可简写为> 
+```
+	.\DfuSeCommand.exe -t test.hex -c --de 0 -d --fn test.dfu 
+``` 
+
+上述命令可分写为> 
+```
+	.\DfuSeCommand.exe -t test.hex demo.dfu    将test.hex转成demo.dfu文件
+	.\DfuSeCommand.exe -c --de 0               连接dfu设备
+	.\DfuSeCommand.exe -d --fn demo.dfu        下载之前生成的demo.dfu文件
+``` 
+
+
+	
 
 
