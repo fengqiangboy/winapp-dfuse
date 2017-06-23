@@ -130,7 +130,11 @@ void man()
 	printf("     --o               : optimize; removes FFs data \n");
 	printf("     --fn  file_name   : full path name (.dfu file) \n");
 
+	printf("  -t                   (Convert hex file to dfu file ) \n");
+	printf("     hexFilePath       : the source file path of *.hex \n");
+	printf("     dfuFilePath       : the target file path of *.dfu \n");
 
+	printf("  eg: .\DfuSeCommand.exe -t test.hex -c --de 0 -d --fn test.dfu \n");
 
 }
 
@@ -1372,7 +1376,7 @@ int main(int argc, char* argv[])
 	{
 		man();
 
-		getchar();
+		//getchar();
 
 	}
 	else
@@ -1602,59 +1606,75 @@ int main(int argc, char* argv[])
 			//============================ hex2dfu ==============================================
 			else if (strcmp(argv[arg_index], "-t") == 0)
 			{
-				if (arg_index++ >= argc)
+				while (arg_index < argc)
 				{
-					printf("Please select .hex or .s19 file\r\n");
-					return 0;
-				}
-				CString Tmp;
-				HANDLE Image;
-				HANDLE hFile;
-				BYTE m_AltSet = 0;
-				PSTR tFilePath = "";
+					if (arg_index < argc - 1)
+						arg_index++;
+					else
+						break;
 
-				if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
-				{
-					Tmp.Format("Image for Alternate Setting %02i", m_AltSet);
-					
-					if (argc == 3)//no target file
+					if (Is_Option(argv[arg_index]))
+						break;
+
+					else //if (Is_SubOption(argv[arg_index]))
 					{
+						int filePoint = 0;
+						CString Tmp;
+						char * pstr;
+						
+						HANDLE Image;
+						HANDLE hFile;
+						BYTE m_AltSet = 0;
+						CString tFilePath = "";
+						char buf[512];
 						char Drive[3], Dir[256], Fname[256], Ext[256];
-						_splitpath(argv[arg_index], Drive, Dir, Fname, Ext);
-						tFilePath = strncat(Fname, ".dfu", 4);
-					}
-					else
-						tFilePath = argv[++arg_index];
 
-					printf("%s\r\n", tFilePath);
-					if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)tFilePath) == STDFUFILES_NOERROR)
-					{
-						Tmp += "  (";
-						Tmp += argv[arg_index];
-						Tmp += ")";
+						if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
+						{
+							printf("Image for Alternate Setting %02i\r\n", m_AltSet);
+							if (arg_index < argc - 1)
+							{
+								arg_index++;//到达目标文件夹				
+								if (Is_Option(argv[arg_index]) || Is_SubOption(argv[arg_index]))
+									arg_index--;
+							}
+							
+							Tmp = ((CString)argv[arg_index]);
+							if ((Tmp.Find(".dfu") == -1) && (Tmp.Find(".hex") == -1))//文件后缀不对
+							{
+								printf("The file ext is error.\r\n");
+							}
+							tFilePath = Tmp.Left(strlen(Tmp)-4) + ".dfu";
+							
+							if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)tFilePath) == STDFUFILES_NOERROR)
+							{
+								Tmp = " (" + (CString)argv[arg_index] + ") ";
+								printf("Create image from this file" + Tmp + "successful.\r\n");
+							}
+						}
+						else
+						{
+							printf("Unable to create image from this file...");
+							return 0;
+						}
+
+						if (STDFUFILES_CreateNewDFUFile((LPSTR)(LPCSTR)tFilePath, &hFile, 0x0483, 0x0000, 0x0000) == STDFUFILES_NOERROR)
+						{
+							if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
+								printf("Success for convert .hex to .dfu.\r\n");
+							else
+								printf("Failure for convert .hex to .dfu.\r\n");
+							STDFUFILES_CloseDFUFile(hFile);
+						}
+						if (arg_index == argc - 1)
+						{
+							printf("\n Press any key to continue ...");
+							getchar();
+							return 1;
+						}
+							
 					}
-					printf(Tmp+"\r\n");
 				}
-				else
-				{
-					printf("Unable to create image from this file...");
-					return 0;
-				}
-				
-				if (STDFUFILES_CreateNewDFUFile((LPSTR)(LPCSTR)tFilePath, &hFile, 0x0483, 0x0000, 0x0000) == STDFUFILES_NOERROR)
-				{
-					if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
-					{
-						printf("Success for convert.");
-					}
-					else
-					{
-						printf("Failure for convert.");
-					}
-					STDFUFILES_CloseDFUFile(hFile);
-				}
-				//printf("\n Hello World ...");
-				return 0;
 			}
 			
 		} // While
