@@ -30,7 +30,15 @@
 #include <dos.h>
 #include <windows.h>
 //#include <iostream.h>
-
+//#pragma comment(lib,".\\lib\\STDFU.lib")
+//#pragma comment(lib,".\\lib\\STDFUFiles.lib")
+//#pragma comment(lib,".\\lib\\STDFUPRT.lib")
+//#pragma comment(lib,".\\lib\\STTubeDevice30.lib")
+//
+//#include ".\\lib\\STDFU.H"
+//#include ".\\lib\\STDFUFiles.h"
+//#include ".\\lib\\STDFUPRT.h"
+//#include ".\\lib\\STTubeDevice.h"
 
 static GUID	GUID_DFU = { 0x3fe809ab, 0xfb91, 0x4cb5, { 0xa6, 0x43, 0x69, 0x67, 0x0d, 0x52,0x36,0x6e } };
 
@@ -1618,16 +1626,11 @@ int main(int argc, char* argv[])
 
 					else //if (Is_SubOption(argv[arg_index]))
 					{
-						int filePoint = 0;
 						CString Tmp;
-						char * pstr;
-						
 						HANDLE Image;
 						HANDLE hFile;
 						BYTE m_AltSet = 0;
 						CString tFilePath = "";
-						char buf[512];
-						char Drive[3], Dir[256], Fname[256], Ext[256];
 
 						if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
 						{
