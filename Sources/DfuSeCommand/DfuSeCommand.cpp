@@ -1669,7 +1669,11 @@ int main(int argc, char* argv[])
 								printf("Failure for convert .hex to .dfu.\r\n");
 							STDFUFILES_CloseDFUFile(hFile);
 						}
-						if (arg_index == argc - 1)
+						if (argc == 3)//ºÊ»›hex2dfu.exe
+						{
+							return 1;
+						}
+						else if (arg_index == argc - 1)
 						{
 							printf("\n Press any key to continue ...");
 							getchar();

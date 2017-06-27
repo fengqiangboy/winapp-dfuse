@@ -1929,6 +1929,8 @@ void CDfuSeDemoDlg::LaunchUpgrade()
 		}
 		else
 		{
+			//DFUThreadContext Context;
+			//Test(&Context);
 			m_Progress.SetPos(0);
 			m_Progress.SetWindowText("");
 			m_Progress.SetShowText(TRUE);

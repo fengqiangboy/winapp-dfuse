@@ -42,6 +42,7 @@ BOOL CDownloadThread::RunThread()
 	DWORD dwPercentCalc;
 	// Download State Machine
 
+
 	m_PollTime=0;
 
 	GetCurrentContext(&Context);
@@ -164,6 +165,7 @@ BOOL CDownloadThread::RunThread()
 			DFUIMAGEELEMENT Element;
 			CImage *pImage=(CImage*)Context.hImage;
 			DWORD i, NbEl=pImage->GetNbElements();
+			
 
 			if (Context.Operation==OPERATION_ERASE)
 				Context.Percent=((Context.CurrentImageElement+1)*99)/NbEl;
@@ -193,7 +195,10 @@ BOOL CDownloadThread::RunThread()
 						if (Context.Operation==OPERATION_ERASE)
 							bRet=EraseAndGetStatus(&Context);
 						else
-							bRet=SetAddressAndGetStatus(&Context);
+						{
+							bRet = SetAddressAndGetStatus(&Context);
+						}
+
 						if (bRet)
 							break;
 					}
@@ -203,22 +208,29 @@ BOOL CDownloadThread::RunThread()
 						break;
 					}
 				}
-				if ( (bRet) && (!NeedsToChangeElement) )
-					bRet=DownloadAndGetStatus(&Context);
-				else
-				if ( (!bRet) && (NeedsToChangeElement) )
+				if ((bRet) && (!NeedsToChangeElement))
+				{
+					
+					bRet = DownloadAndGetStatus(&Context);
+				}
+				else if ( (!bRet) && (NeedsToChangeElement) )
 				{
 					// Success !
 					EnsureIdleMode(&Context);
 					Context.Percent=100;
 					SetCurrentContext(&Context);
 					bRet=FALSE;
+					
+				Test(&Context);
 				}
 			}
 			else
 			{
-				if (Context.CurrentNBlock>=2)
-					bRet=DownloadAndGetStatus(&Context);
+				if (Context.CurrentNBlock >= 2)
+				{
+					bRet = DownloadAndGetStatus(&Context);
+				}
+					
 				else
 				{
 					if (Context.Operation==OPERATION_ERASE)

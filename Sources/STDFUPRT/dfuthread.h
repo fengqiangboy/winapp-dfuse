@@ -44,6 +44,7 @@ public:
 protected:
 	virtual BOOL    SetNextBlockDataParameters(PDFUThreadContext pContext, PBOOL pNeedsToChangeElement);
 	virtual BOOL	EnsureIdleMode(PDFUThreadContext pContext);
+	virtual BOOL	Test(PDFUThreadContext pContext);
 	virtual BOOL	EraseAndGetStatus(PDFUThreadContext pContext);
 	virtual BOOL	SetAddressAndGetStatus(PDFUThreadContext pContext);
 	virtual BOOL	DownloadAndGetStatus(PDFUThreadContext pContext);

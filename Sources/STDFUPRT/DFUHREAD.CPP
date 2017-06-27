@@ -458,6 +458,17 @@ BOOL CDFUThread::ActionAndGetStatus(PDFUThreadContext pContext)
 	return bRet;
 }
 
+BOOL CDFUThread::Test(PDFUThreadContext pContext)
+{
+	BOOL bRet = TRUE;
+
+	pContext->CurrentNBlock = 0x810000;
+	pContext->CurrentLength = 5; //
+	pContext->CurrentRequest = STDFU_RQ_DOWNLOAD;
+	bRet = ActionAndGetStatus(pContext);
+	return bRet;
+}
+
 BOOL CDFUThread::EraseAndGetStatus(PDFUThreadContext pContext)
 {
 	BOOL bRet=TRUE;
