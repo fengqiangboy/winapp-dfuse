@@ -93,6 +93,10 @@
 	.\DfuSeCommand.exe -d --fn demo.dfu        下载之前生成的demo.dfu文件
 ``` 
 
+#### 更新日期 2017/07/06
+我把.hex文件转.dfu文件的可执行程序及命令行工具放在了另一个仓储，名字"hex2dfu"这样就方便用户直接下载使用了。
+[hex2dfu工具](https://github.com/havenxie/winapp-hex2dfu)
+
 
 	
 
