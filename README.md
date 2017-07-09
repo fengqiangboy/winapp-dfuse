@@ -97,5 +97,14 @@
 我把.hex文件转.dfu文件的可执行程序及命令行工具放在了另一个仓储，名字"hex2dfu"这样就方便用户直接下载使用了。
 [hex2dfu工具](https://github.com/havenxie/winapp-hex2dfu)
 
+#### 更新日期 2017/07/10
+增加了DfuSeCommand.exe脚本中的*选择器的功能，用户可以用命令：
+```
+.\DfuSeCommand.exe -t *.hex demo.dfu 进行格式转换，或者用下面简写方式
+.\DfuSeCommand.exe -t *.hex  
+```
+
+
+
 
 
