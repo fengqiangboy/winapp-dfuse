@@ -103,8 +103,3 @@
 .\DfuSeCommand.exe -t *.hex demo.dfu 进行格式转换，或者用下面简写方式
 .\DfuSeCommand.exe -t *.hex  
 ```
-
-
-
-
-
