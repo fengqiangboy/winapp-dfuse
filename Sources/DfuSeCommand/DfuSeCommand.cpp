@@ -1367,7 +1367,47 @@ void OnCancel()
 	}
 }
 
+WIN32_FIND_DATA Files[MAX_PATH] = {0};
 
+UINT8 SearchFilesByWildcard(LPCSTR wildcardPath)
+{
+	HANDLE hFile = INVALID_HANDLE_VALUE;
+	WIN32_FIND_DATA pNextInfo;
+	UINT8 File_cnt = 0;
+
+	hFile = FindFirstFile(wildcardPath, &pNextInfo);
+	if (INVALID_HANDLE_VALUE == hFile)
+	{
+		return 0;
+	}
+
+	WCHAR infPath[MAX_PATH] = { 0 };
+	if (pNextInfo.cFileName[0] != '.')
+	{
+		Files[File_cnt++] = pNextInfo;
+		printf("Find result = %s\r\n", pNextInfo.cFileName);
+	}
+
+	while (FindNextFile(hFile, &pNextInfo))
+	{
+		if (pNextInfo.cFileName[0] == '.')
+		{
+			continue;
+		}
+		Files[File_cnt++] = pNextInfo;
+		printf("Find result = %s\r\n", pNextInfo.cFileName);
+	}
+	//while (File_cnt--)
+	//{
+	//	printf("%s\r\n", Files[File_cnt].cFileName);
+	//}
+	return File_cnt;
+}
+
+void convert()
+{
+
+}
 
 /*******************************************************************************************/
 /* Function    : main																       */
@@ -1612,6 +1652,7 @@ int main(int argc, char* argv[])
 			}
 
 			//============================ hex2dfu ==============================================
+
 			else if (strcmp(argv[arg_index], "-t") == 0)
 			{
 				while (arg_index < argc)
@@ -1631,44 +1672,66 @@ int main(int argc, char* argv[])
 						HANDLE hFile;
 						BYTE m_AltSet = 0;
 						CString tFilePath = "";
+						UINT8 File_num = 0;
+						UINT8 i = 0;
 
-						if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
+						File_num = ((CString)argv[arg_index]).Find("*.hex") == -1 ? 1 : SearchFilesByWildcard(argv[arg_index]);
+						while (i < File_num)
 						{
-							printf("Image for Alternate Setting %02i\r\n", m_AltSet);
-							if (arg_index < argc - 1)
+							//if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
+							if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)Files[i].cFileName, &Image, m_AltSet) == STDFUFILES_NOERROR)
 							{
-								arg_index++;//到达目标文件夹				
-								if (Is_Option(argv[arg_index]) || Is_SubOption(argv[arg_index]))
+								printf("Image for Alternate Setting %02i\r\n", m_AltSet);
+								if (arg_index < argc - 1)
+								{
+									arg_index++;//到达目标文件夹				
+									if (Is_Option(argv[arg_index]) || Is_SubOption(argv[arg_index]))
+									{
+										
+										Tmp = (CString)Files[i].cFileName;
+									}								
+									else
+									{
+										Tmp = ((CString)argv[arg_index]);//获取目标文件名
+									}
 									arg_index--;
-							}
-							
-							Tmp = ((CString)argv[arg_index]);
-							if ((Tmp.Find(".dfu") == -1) && (Tmp.Find(".hex") == -1))//文件后缀不对
-							{
-								printf("The file ext is error.\r\n");
-							}
-							tFilePath = Tmp.Left(strlen(Tmp)-4) + ".dfu";
-							
-							if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)tFilePath) == STDFUFILES_NOERROR)
-							{
-								Tmp = " (" + (CString)argv[arg_index] + ") ";
-								printf("Create image from this file" + Tmp + "successful.\r\n");
-							}
-						}
-						else
-						{
-							printf("Unable to create image from this file...");
-							return 0;
-						}
+								}
+								else
+								{
+									Tmp = (CString)Files[i].cFileName;
+								}
 
-						if (STDFUFILES_CreateNewDFUFile((LPSTR)(LPCSTR)tFilePath, &hFile, 0x0483, 0x0000, 0x0000) == STDFUFILES_NOERROR)
-						{
-							if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
-								printf("Success for convert .hex to .dfu.\r\n");
+								if ((Tmp.Find(".dfu") == -1) && (Tmp.Find(".hex") == -1))//文件后缀不对
+								{
+									printf("The file ext is error.\r\n");
+								}
+								tFilePath = Tmp.Left(strlen(Tmp) - 4) + ".dfu";
+
+								if (STDFUFILES_SetImageName(Image, (PSTR)(LPCSTR)tFilePath) == STDFUFILES_NOERROR)
+								{
+									Tmp = " (" + Tmp +") ";
+									printf("Create image from this file" + Tmp + "successful.\r\n");
+								}
+								i++;
+							}
 							else
-								printf("Failure for convert .hex to .dfu.\r\n");
-							STDFUFILES_CloseDFUFile(hFile);
+							{
+								printf("Unable to create image from this file...");
+								//return 0;
+								i++;
+								continue;
+							}
+							if (STDFUFILES_CreateNewDFUFile((LPSTR)(LPCSTR)tFilePath, &hFile, 0x0483, 0x0000, 0x0000) == STDFUFILES_NOERROR)
+							{
+								if (STDFUFILES_AppendImageToDFUFile(hFile, Image) == STDFUFILES_NOERROR)
+									printf("Success for convert .hex to .dfu.\r\n");
+								else
+									printf("Failure for convert .hex to .dfu.\r\n");
+								STDFUFILES_CloseDFUFile(hFile);
+							}
 						}
+						
+
 						if (argc == 3)//兼容hex2dfu.exe
 						{
 							return 1;
@@ -1676,7 +1739,7 @@ int main(int argc, char* argv[])
 						else if (arg_index == argc - 1)
 						{
 							printf("\n Press any key to continue ...");
-							getchar();
+							//getchar();
 							return 1;
 						}
 							
