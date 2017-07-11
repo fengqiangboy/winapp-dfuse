@@ -1699,7 +1699,6 @@ int main(int argc, char* argv[])
 								printf("Image for Alternate Setting %02i\r\n", m_AltSet);
 								if (arg_index < argc - 1)
 								{
-									
 									arg_index++;//到达目标文件夹				
 									if (Is_Option(argv[arg_index]) || Is_SubOption(argv[arg_index]))
 									{
@@ -1709,14 +1708,13 @@ int main(int argc, char* argv[])
 									}								
 									else
 									{
-										if (((CString)argv[arg_index]).Find(".hex") != -1)
+										if ((((CString)argv[arg_index-1]).Find("*.hex") != -1) && (File_num > 1))
 										{
-											printf("error, has more than one src and only one dic");
+											printf("Error. There are multiple source files, but only one destination file.");
 											return -1;
 										}
 										Tmp = ((CString)argv[arg_index]);//获取目标文件名
-									}
-									
+									}	
 								}
 								else
 								{
