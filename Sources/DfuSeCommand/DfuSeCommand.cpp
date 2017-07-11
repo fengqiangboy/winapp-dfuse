@@ -1675,7 +1675,22 @@ int main(int argc, char* argv[])
 						UINT8 File_num = 0;
 						UINT8 i = 0;
 
-						File_num = ((CString)argv[arg_index]).Find("*.hex") == -1 ? 1 : SearchFilesByWildcard(argv[arg_index]);
+						
+						if(((CString)argv[arg_index]).Find(".hex") != -1)
+						{
+							File_num = SearchFilesByWildcard(argv[arg_index]);
+							while (i < File_num)
+							{
+								if (Files[i].cFileName == argv[arg_index])
+								{
+									File_num = i + 1;
+									break;
+								}
+								i++;
+							}
+							if (i == File_num)
+								i = 0;
+						}
 						while (i < File_num)
 						{
 							//if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
@@ -1684,17 +1699,24 @@ int main(int argc, char* argv[])
 								printf("Image for Alternate Setting %02i\r\n", m_AltSet);
 								if (arg_index < argc - 1)
 								{
+									
 									arg_index++;//到达目标文件夹				
 									if (Is_Option(argv[arg_index]) || Is_SubOption(argv[arg_index]))
 									{
 										
 										Tmp = (CString)Files[i].cFileName;
+										arg_index--;
 									}								
 									else
 									{
+										if (((CString)argv[arg_index]).Find(".hex") != -1)
+										{
+											printf("error, has more than one src and only one dic");
+											return -1;
+										}
 										Tmp = ((CString)argv[arg_index]);//获取目标文件名
 									}
-									arg_index--;
+									
 								}
 								else
 								{
