@@ -1367,7 +1367,7 @@ void OnCancel()
 	}
 }
 
-WIN32_FIND_DATA Files[MAX_PATH] = {0};
+CString Files[MAX_PATH] = {'0'};
 
 UINT8 SearchFilesByWildcard(LPCSTR wildcardPath)
 {
@@ -1384,7 +1384,7 @@ UINT8 SearchFilesByWildcard(LPCSTR wildcardPath)
 	WCHAR infPath[MAX_PATH] = { 0 };
 	if (pNextInfo.cFileName[0] != '.')
 	{
-		Files[File_cnt++] = pNextInfo;
+		Files[File_cnt++] = pNextInfo.cFileName;
 		printf("Find result = %s\r\n", pNextInfo.cFileName);
 	}
 
@@ -1394,7 +1394,7 @@ UINT8 SearchFilesByWildcard(LPCSTR wildcardPath)
 		{
 			continue;
 		}
-		Files[File_cnt++] = pNextInfo;
+		Files[File_cnt++] = pNextInfo.cFileName;
 		printf("Find result = %s\r\n", pNextInfo.cFileName);
 	}
 	//while (File_cnt--)
@@ -1674,14 +1674,14 @@ int main(int argc, char* argv[])
 						CString tFilePath = "";
 						UINT8 File_num = 0;
 						UINT8 i = 0;
-
-						
-						if(((CString)argv[arg_index]).Find(".hex") != -1)
+						char Drive[3], Dir[256], Fname[256], Ext[256];
+						_splitpath(((CString)argv[arg_index]), Drive, Dir, Fname, Ext);
+						if (strcmp(Ext, ".hex") == 0)
 						{
 							File_num = SearchFilesByWildcard(argv[arg_index]);
 							while (i < File_num)
 							{
-								if (Files[i].cFileName == argv[arg_index])
+								if(strcmp(Files[i], Fname) == 0)
 								{
 									File_num = i + 1;
 									break;
@@ -1691,10 +1691,23 @@ int main(int argc, char* argv[])
 							if (i == File_num)
 								i = 0;
 						}
+
 						while (i < File_num)
 						{
-							//if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)argv[arg_index], &Image, m_AltSet) == STDFUFILES_NOERROR)
-							if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)Files[i].cFileName, &Image, m_AltSet) == STDFUFILES_NOERROR)
+							CString cStr, temp;
+							temp.Format("%s", Drive);
+							cStr += temp;
+							temp.Empty();
+							temp.Format("%s", Dir);
+							cStr += temp;
+							temp.Empty();
+							//cStr.Delete(cStr.GetLength() - 1, 1);//去掉不包含文件名的路径的最后一个\，否则编译器会误会有转义字符						
+							temp.Format("%s", Files[i]);//将路径拼接成想要的文件路径
+							cStr += temp;
+							temp.Empty();
+							//cStr.Replace("\\", "\\\\");
+							cStr.TrimRight();
+							if (STDFUFILES_ImageFromFile((LPSTR)(LPCSTR)cStr, &Image, m_AltSet) == STDFUFILES_NOERROR)
 							{
 								printf("Image for Alternate Setting %02i\r\n", m_AltSet);
 								if (arg_index < argc - 1)
@@ -1703,7 +1716,7 @@ int main(int argc, char* argv[])
 									if (Is_Option(argv[arg_index]) || Is_SubOption(argv[arg_index]))
 									{
 										
-										Tmp = (CString)Files[i].cFileName;
+										Tmp = cStr;
 										arg_index--;
 									}								
 									else
@@ -1718,7 +1731,7 @@ int main(int argc, char* argv[])
 								}
 								else
 								{
-									Tmp = (CString)Files[i].cFileName;
+									Tmp = cStr;
 								}
 
 								if ((Tmp.Find(".dfu") == -1) && (Tmp.Find(".hex") == -1))//文件后缀不对
