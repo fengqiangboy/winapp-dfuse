@@ -103,3 +103,6 @@
 .\DfuSeCommand.exe -t *.hex demo.dfu 进行格式转换，或者用下面简写方式
 .\DfuSeCommand.exe -t *.hex  
 ```
+
+#### 更新日期 2017/07/17
+解决因引入*选择器而导致的文件路径bug。
