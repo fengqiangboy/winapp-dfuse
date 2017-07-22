@@ -22,6 +22,9 @@
 ************
         + 解决ST官方所提供的DfuSe_v3.0.4版本无法将.hex格式文件直接转换成.dfu格式文件的痛点。
 	+ 解决ST官方所提供的DfuSe_v3.0.4版本保存生成的目标文件之后文件找不到的BUG。
+	+ DfuSeCommand.exe增加-t指令，用于将.hex文件通过命令行转成.dfu文件,如.\DfuSeCommand.exe -t test.hex demo.dfu
+	+ DfuSeCommand.exe的-t指令可以与之前的指令联合使用，可以使用一行命令实现文件格式转换与下载。
+	+ DfuSeCommand.exe-t指令支持通配符选择方式，如.\DfuSeCommand.exe -t *.hex
 
 作者HavenXie
 
